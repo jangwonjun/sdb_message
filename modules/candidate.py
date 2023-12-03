@@ -102,6 +102,7 @@ class candidate_data():
             
             
             
+            
         data_list = [line.split(',') for line in sdb_db.split('\n')]
         data_list[0][0] = data_list[0][0].lstrip('\ufeff')
         
