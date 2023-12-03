@@ -43,6 +43,8 @@ def student_send_message():
 
     return "전송하였습니다."
 
+
+
         
 @app.route('/main')
 def main():

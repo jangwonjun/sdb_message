@@ -91,6 +91,8 @@ class candidate_data():
             self.data.append([send_message,send_student_name])
         
         #print("출력할 데이터들",self.data)
+        
+        
         return self.data
 
 
