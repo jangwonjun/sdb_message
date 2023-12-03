@@ -42,6 +42,7 @@ def student_send_message():
         print(json.dumps(json.loads(res.text), indent=2, ensure_ascii=False))
 
     return "전송하였습니다."
+
         
 @app.route('/main')
 def main():

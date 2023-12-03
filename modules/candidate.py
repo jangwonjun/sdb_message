@@ -98,6 +98,8 @@ class candidate_data():
         with open('data/sdb_student_db.csv',encoding='utf-8') as f:
             sdb_db = f.read()
             
+            
+            
         data_list = [line.split(',') for line in sdb_db.split('\n')]
         data_list[0][0] = data_list[0][0].lstrip('\ufeff')
         
