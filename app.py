@@ -10,22 +10,24 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 app = Flask(__name__, static_url_path='/static')
 
+
 sdb_system = candidate_data()
 
 student_phone_num_data = sdb_system.search_phone_num_student()
 num_inf = sdb_system.send_student_num()
-parents_phone_num_data = sdb_system.search_phone_num_parents()
 send_data = sdb_system.send_student_message()
 
-print(len(student_phone_num_data)) #sdb db에서 이름과 대조하여 동일한 학생을 찾은 경우
-print(student_phone_num_data) #[학생전화번호,이름] 
-print(len(send_data)) #실제로 메세지를 보내야하는 인원의 수(즉, 정리하자면 3번 리스트에 정리한 인원)
+print('최종적으로 전송할 데이터',student_phone_num_data)
 
-
-@app.route('/message_send')
+@app.route('/message_send', methods=['POST'])
 def student_send_message():
-    #여기서의 for문은 보내야할 인원이 아닌, 동일한 학생을 찾은 경우로 생각하고 진행해야지 올바름.
+    success_data_student = []
+    success_data_parents = []
+    print("도달에 성공하였습니다.")
+    print("학생/학부모 문자 전송준비완료...")
+
     for i in range(len(student_phone_num_data)):
+
         
         data = {
                 'messages': [
@@ -33,19 +35,33 @@ def student_send_message():
                         'to': student_phone_num_data[i][0],
                         'from': SEND.SENDNUMBER,
                         'subject': '수다방학원',
-                        'text': send_data[i][0]
-                    }
+                        'text': student_phone_num_data[i][3]
+                    }   
                 ]
             }
         res = message.send_many(data)
-        print(f"{send_data[i][1]}에게 성공적으로 전송했습니다")
+        
         print(json.dumps(json.loads(res.text), indent=2, ensure_ascii=False))
+        print(f"{student_phone_num_data[i][2]}에게 성공적으로 전송했습니다")
+        success_data_student.append([student_phone_num_data[i][2],student_phone_num_data[i][0]])
 
-    return "전송하였습니다."
+        data2 = {
+                'messages': [
+                    {
+                        'to': student_phone_num_data[i][1],
+                        'from': SEND.SENDNUMBER,
+                        'subject': '수다방학원',
+                        'text': student_phone_num_data[i][3]
+                    }
+                ]
+            }
+        res = message.send_many(data2)
+        print(f"{student_phone_num_data[i][2]} 학부모에게 성공적으로 전송했습니다")
+        print(json.dumps(json.loads(res.text), indent=2, ensure_ascii=False))
+        success_data_parents.append([{student_phone_num_data[i][2]},student_phone_num_data[i][1]])
+        
 
-
-
-
+    return render_template('message.html', send_result_student=success_data_student, send_result_parent=success_data_parents,target_data=send_data)
         
 @app.route('/main')
 def main():

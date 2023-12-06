@@ -40,7 +40,7 @@ class candidate_data():
         self.num_inf = worksheet_2.acell('C5').value
         
         # 범위(셀 위치 리스트) 가져오기
-        range_list = worksheet_1.range('A2:M9')
+        range_list = worksheet_1.range(f'A2:M{int(self.num_inf)+1}')
         
         #상속처리하자!
         self.index_num = worksheet_1.row_count
@@ -72,7 +72,7 @@ class candidate_data():
             self.worksheet_3.update(f'C{i+2}',message)
             self.result.append([message, inform_student[i][2]])
 
-        #print(self.result[0])
+        print("Sheet3 전송메세지 정리완료...")
 
 
     def send_student_num(self):
@@ -87,21 +87,16 @@ class candidate_data():
             send_message = self.worksheet_3.acell(f'C{i+2}').value
             send_student_name = self.worksheet_3.acell(f'A{i+2}').value
             #print(send_message,send_student_name)
-            print(i)
+            #print(i)
             self.data.append([send_message,send_student_name])
         
-        #print("출력할 데이터들",self.data)
-        
-        
+        print("Sheet3 기반 전송메세지 저장완료...")
         return self.data
 
 
     def search_phone_num_student(self):
         with open('data/sdb_student_db.csv',encoding='utf-8') as f:
             sdb_db = f.read()
-            
-            
-            
             
         data_list = [line.split(',') for line in sdb_db.split('\n')]
         data_list[0][0] = data_list[0][0].lstrip('\ufeff')
@@ -115,34 +110,31 @@ class candidate_data():
                     #print(data_list[p][3])
                     #중복방지작업_1차안 마련해야함. 일단 진행하기
 
-                    #[학생전화번호, 이름] 2차원 배열로 저장
-                    self.send_num_student.append([data_list[p][3],data_list[p][0]])
+                    #[학생전화번호,부모님전화번호,이름] 배열로 저장
+                    self.send_num_student.append([data_list[p][3],data_list[p][4],data_list[p][0]])
+        
+        
+        print("1차 데이터 정리완료...")
             
-        #print("TEST", self.send_num_student)
+            
+            #print(self.send_num_student)
+
+            #여기서 오류
+            #p = 0,1,2,3,4,5,6,7
+            #5개  0 1 2 3 4
+        for p in range(int(self.num_inf)):
+            for i in range(len(self.send_num_student)):
+                if self.result[p][1] == self.send_num_student[i][2]:
+                    self.send_num_student[i].insert(3, self.result[p][0])
+    
+        print("2차 데이터 정리완료...")
+        
+        print(self.send_num_student)
         
         return self.send_num_student
     
-    def search_phone_num_parents(self):
-        with open('data/sdb_student_db.csv',encoding='utf-8') as f:
-            sdb_db_parents = f.read()
-            
-        parents_data_list = [line.split(',') for line in sdb_db_parents.split('\n')]
-        parents_data_list[0][0] = parents_data_list[0][0].lstrip('\ufeff')
-        
-        #print(parents_data_list)
-        
-        for p in range(len(parents_data_list)):
-            for i in range(int(self.num_inf)):
-                if parents_data_list[p][0] == self.result[i][1]:
-                    #학생이름을 통해 학생 전화번호 찾기
-                    
-                    #중복방지작업_1차안 마련해야함. 일단 진행하기
+  
 
-                    #[학부모전화번호, 학생이름] 2차원 배열로 저장
-                    self.send_num_parents.append([parents_data_list[p][4],parents_data_list[p][0]])
-            
-        #print("TEST", self.send_num_parents)
-        
-        return self.send_num_parents
+
     
         
