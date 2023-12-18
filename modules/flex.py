@@ -20,6 +20,7 @@ class login_system():
         doc = gc.open_by_url(spreadsheet_url)
 
         # 시트 선택하기
+        
         self.worksheet = doc.worksheet('로그인')
 
         self.inform_num = self.worksheet.row_count
