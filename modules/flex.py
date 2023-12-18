@@ -1,6 +1,6 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-
+from env import FLASK_ENUM
 
 class login_system():
     def __init__(self):
@@ -14,7 +14,7 @@ class login_system():
         credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
         gc = gspread.authorize(credentials)
 
-        spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1oS8bePikNsnO6MIVB38x7Mko_vKR_m0FtmPt4a0xBX0/edit?usp=sharing'
+        spreadsheet_url = FLASK_ENUM.LINK
 
         # 스프레스시트 문서 가져오기
         doc = gc.open_by_url(spreadsheet_url)
