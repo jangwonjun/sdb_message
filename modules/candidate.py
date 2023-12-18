@@ -2,7 +2,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 class candidate_data():
-    def __init__(self):
+    def __init__(self,url):
         scope = [
             'https://spreadsheets.google.com/feeds',
             'https://www.googleapis.com/auth/drive',
@@ -17,6 +17,7 @@ class candidate_data():
         self.send_num_student = []
         self.send_num_parents = []
         self.send_name_student = []
+        self.url = url
     
 
         json_file_name = 'data/sdbtest-405023-ac7947388cf4.json'
@@ -24,15 +25,15 @@ class candidate_data():
         credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
         gc = gspread.authorize(credentials)
 
-        spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1oS8bePikNsnO6MIVB38x7Mko_vKR_m0FtmPt4a0xBX0/edit?usp=sharing'
+        spreadsheet_url = self.url
 
         # 스프레스시트 문서 가져오기
         doc = gc.open_by_url(spreadsheet_url)
 
         # 시트 선택하기
-        worksheet_1 = doc.worksheet('수다방_문자서비스')
+        worksheet_1 = doc.worksheet('학습일지')
         worksheet_2 = doc.worksheet('전송인원정보')
-        self.worksheet_3 = doc.worksheet('전송메시지')
+        self.worksheet_3 = doc.worksheet('전송메세지')
         worksheet_4 = doc.worksheet('주관관리표')
         
         #num_inf는 출력할 학생수를 의미한다!
@@ -117,11 +118,7 @@ class candidate_data():
         print("1차 데이터 정리완료...")
             
             
-            #print(self.send_num_student)
-
-            #여기서 오류
-            #p = 0,1,2,3,4,5,6,7
-            #5개  0 1 2 3 4
+        
         for p in range(int(self.num_inf)):
             for i in range(len(self.send_num_student)):
                 if self.result[p][1] == self.send_num_student[i][2]:
