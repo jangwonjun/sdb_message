@@ -79,14 +79,14 @@ def login():
         password = request.form.get('password') 
         print(id, password)  
 
-        auth_inform = sdb_login_system.login(id, password)
+        auth_inform = sdb_login_system.new_login(id, password)
         print(auth_inform)
         next = '로그인성공'
-        session["username"] = auth_inform[0][1] #세션에 저장
+        session["username"] = auth_inform[0] #세션에 저장
+        session["url"] = auth_inform[0][1]
     
         if auth_inform:
-            data = candidate_data(str(auth_inform[0]))
-            return render_template('index.html',server_state=server_state, next=next, teacher = auth_inform[0][1])
+            return render_template('index.html',server_state=server_state, next=next, teacher = auth_inform[0][0])
     
     return render_template('login.html') 
 
@@ -94,6 +94,11 @@ def login():
 def search_inf():
     next = '로그인성공'
     teacher = session.get("username")
+    url = session.get("url")
+    print(url)
+    #data = sdb_system.candidate_data(url)
+    print(data)
+
     return render_template('index.html',data=student_phone_num_data, next = next,teacher=teacher)
 
 if __name__ == '__main__':
