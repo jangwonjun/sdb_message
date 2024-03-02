@@ -96,7 +96,7 @@ def search_inf():
     teacher = session.get("username")
     url = session.get("url")
     print(url)
-    #data = sdb_system.candidate_data(url)
+    data = sdb_system.candidate_data(url)
     print(data)
 
     return render_template('index.html',data=student_phone_num_data, next = next,teacher=teacher)

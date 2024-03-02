@@ -30,11 +30,17 @@ class login_system():
 
         data = []
         
-        if id_result[0][0] == id and password_result[0][1] == password:
-            data.append((id_result[0][2],id_result[0][3]))
+        print(id_result)
+        if id_result[0][0] == id:
+            print("pass")
+            #print(password_result)
+            if id_result[0][1] == password:
+                data.append((id_result[0][2],id_result[0][3]))
+            else:
+                print("아이디 혹은 비밀번호가 잘못되었습니다.")
             
         else:
-            print("아이디 혹은 비밀번호가 잘못되었습니다,")
+            print("아이디 혹은 비밀번호가 잘못되었습니다.")
 
         return data
         
