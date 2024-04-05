@@ -2,7 +2,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 class candidate_data():
-    def __init__(self,url):
+    def __init__(self,url,teacher_name):
         scope = [
             'https://spreadsheets.google.com/feeds',
             'https://www.googleapis.com/auth/drive',
@@ -10,7 +10,6 @@ class candidate_data():
 
         message = []
         self.result = []
-        temp = []
         self.target_message = []
         message1 = []
         self.send_num = []
@@ -18,6 +17,9 @@ class candidate_data():
         self.send_num_parents = []
         self.send_name_student = []
         self.url = url
+        self.teacher_name = teacher_name
+        
+        print(teacher_name)
     
 
         json_file_name = 'data/sdbtest-405023-ac7947388cf4.json'
@@ -67,7 +69,7 @@ class candidate_data():
 
        
         for i in range(int(self.num_inf)):
-            message = f"안녕하세요! 어머니 수다방 수학학원 하웅진T 입니다. 금일 수업 진행상황 알려드립니다!\n[수업내용]\n\n{inform_student[i][4]}\n\n[교재]\n\n{inform_student[i][5]}"
+            message = f"안녕하세요! 어머니 수다방 수학학원 {teacher_name} 입니다. 금일 수업 진행상황 알려드립니다!\n[수업내용]\n\n{inform_student[i][4]}\n\n[교재]\n\n{inform_student[i][5]}"
 
             self.worksheet_3.update(f'A{i+2}',inform_student[i][2])
             self.worksheet_3.update(f'C{i+2}',message)
@@ -92,6 +94,7 @@ class candidate_data():
             self.data.append([send_message,send_student_name])
         
         print("Sheet3 기반 전송메세지 저장완료...")
+        print(self.data)
         return self.data
 
 

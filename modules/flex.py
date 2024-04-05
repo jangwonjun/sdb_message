@@ -2,6 +2,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from env import FLASK_ENUM,SQL
 import pymysql
+from flask import Flask, request, redirect, render_template, url_for, session
 
 class login_system():
     def __init__(self):
@@ -21,9 +22,6 @@ class login_system():
         cursor.execute(id_sql,(self.id))
         id_result = cursor.fetchall()
         
-        password_sql ="SELECT * FROM users WHERE password = %s"
-        cursor.execute(password_sql,(self.password))
-        password_result = cursor.fetchall()
 
         conn.commit()
         conn.close()
@@ -33,10 +31,10 @@ class login_system():
         print(id_result)
         if id_result[0][0] == id:
             print("pass")
-            #print(password_result)
             if id_result[0][1] == password:
                 data.append((id_result[0][2],id_result[0][3]))
             else:
+                status_code = "password_incorrect"
                 print("아이디 혹은 비밀번호가 잘못되었습니다.")
             
         else:

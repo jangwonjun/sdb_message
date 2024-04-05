@@ -10,12 +10,13 @@ from modules.flex import login_system
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = FLASK_ENUM.KEY
 
-sdb_system = candidate_data(FLASK_ENUM.LINK)
+sdb_system = candidate_data(FLASK_ENUM.LINK,None)
 
 
 student_phone_num_data = sdb_system.search_phone_num_student()
 num_inf = sdb_system.send_student_num()
 send_data = sdb_system.send_student_message()
+#login_fail = login_system.new_login()
 
 server_state = "전송가능합니다."
 
@@ -80,26 +81,31 @@ def login():
         print(id, password)  
 
         auth_inform = sdb_login_system.new_login(id, password)
+        print("정보")
         print(auth_inform)
-        next = '로그인성공'
-        session["username"] = auth_inform[0] #세션에 저장
-        session["url"] = auth_inform[0][1]
-    
-        if auth_inform:
+        if auth_inform :
+            next = '로그인성공'
+            session["username"] = auth_inform[0] #세션에 저장
+            session["url"] = auth_inform[0][1]
             return render_template('index.html',server_state=server_state, next=next, teacher = auth_inform[0][0])
+        
+        else:
+            status_code = "password_incorrect"
+            return render_template('login.html',status_code = status_code)
     
     return render_template('login.html') 
 
-@app.route('/search_inf')
+@app.route('/search_inf',methods=['GET','POST'])
 def search_inf():
     next = '로그인성공'
+    server_state = ''
     teacher = session.get("username")
     url = session.get("url")
     print(url)
-    data = sdb_system.candidate_data(url)
+    data = candidate_data(url,teacher[0])
+    print("data출력 \n")
     print(data)
-
-    return render_template('index.html',data=student_phone_num_data, next = next,teacher=teacher)
+    return render_template('index.html',server_state=server_state, data=data, next = next,teacher=teacher[0])
 
 if __name__ == '__main__':
     app.run('0.0.0.0', debug=True, port=FLASK_ENUM.PORT)

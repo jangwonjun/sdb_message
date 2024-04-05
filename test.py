@@ -1,0 +1,3 @@
+import code.candidate 
+
+candidate()
